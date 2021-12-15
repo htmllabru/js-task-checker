@@ -1,20 +1,27 @@
 const { VM, VMScript } = require('vm2');
  
+
+const sandbox = {
+    test: [
+         function(v1){ console.log(v1); return v1 === 234}
+    ],
+    messages: [],
+    v1: 12
+};
+
 let vm = new VM({
-  timeout: 1000,
-  sandbox: {}
+  timeout: 100,
+  sandbox
 });
  
 const code = `
-const sum = (a,b) => a + b;
- 
-//for(let i = 0; i < 1e10; i++){  2 * 2; }
- 
-var v1 = sum(1,1;
-let v2 = sum(2,2);
-const v3 = sum(3,3);
-this.v4 = sum (4,4);
-123
+const v1 = 234;
+
+
+messages.push( { type: typeof v1 == 'number' ? 'success' : 'error', payload: 'v1 создана и она числового типа' })  
+messages.push( { type: v1 == 234 ? 'success' : 'error', payload: 'v1 равна 234' })  
+messages.push( { type: test[0](v1) ? 'success' : 'error', payload: 'проверка функцией: v1 равна 234' })  
+
 `
  
 try {
@@ -60,3 +67,5 @@ try {
   console.error(' ');
   console.log(JSON.stringify(error, null, ' '));
 }
+
+console.log(sandbox.messages)
