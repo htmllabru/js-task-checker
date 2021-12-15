@@ -30,7 +30,12 @@ const script = new VMScript(codeTest);
 
 try {
   vm.run(script);
-  return sandbox.result
+    // собираем новый ответ 
+    const result = {
+      type: 'Task',      
+      message: sandbox.result
+    }
+  return result;
 } catch (err) {
  
   // получаем фрагменты ответа с ошибкой от интерпретатора
@@ -47,10 +52,10 @@ try {
   const line = fileAndLineNumber.split(':')[1];
  
   // номер символа где ошибка
-  position = pointer.indexOf('^')
+  const position = pointer.indexOf('^')
  
   // собираем новый ответ ошибку
-  const error = {
+  const result = {
     type: 'SyntaxError',
     line,
     code,
@@ -58,7 +63,7 @@ try {
     position
   }
 
-  return error;  
+  return result;  
 }
 
 }

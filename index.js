@@ -25,6 +25,10 @@ const code = `let str = 'Привет', txt = 'true', flag = true, num = 123;`
 
 const result = jsTaskChecker(task, code);
 
-console.log(JSON.stringify(result, null, ' '))
-console.log('Ошибок:', result.filter(m => m.type == '-').length);
+if(result instanceof Array ){
+ console.log(JSON.stringify(result, null, ' '))
+ console.log('Ошибок:', result.filter(m => m.type == '-').length);
+} else {
+  console.log(JSON.stringify(result, null, ' '))
+}
 
