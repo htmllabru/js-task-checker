@@ -21,14 +21,14 @@ const task = {
 };
 
 // внешний код - будет получаться от обучаемого
-const code = `let str = 'Привет', txt = 'true', flag = true, num = 123;`
+const code = `let str 'Привет', txt = 'true', flag = true, num = 123;`
 
 const result = jsTaskChecker(task, code);
 
-if(result instanceof Array ){
- console.log(JSON.stringify(result, null, ' '))
- console.log('Ошибок:', result.filter(m => m.type == '-').length);
+if(typeof result.message == 'string' ){
+  console.log(JSON.stringify(result, null, ' '))
 } else {
   console.log(JSON.stringify(result, null, ' '))
+  console.log('Ошибок:', result.message.filter(m => m.type == '-').length);
 }
 
