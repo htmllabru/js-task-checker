@@ -1,71 +1,34 @@
-const { VM, VMScript } = require('vm2');
- 
+import jsTaskChecker from './js-task-checker.js';
 
-const sandbox = {
-    test: [
-         function(v1){ console.log(v1); return v1 === 234}
-    ],
-    messages: [],
-    v1: 12
+// пример задачи
+const task = {
+  "_id": "1",
+  "task": "Определите переменные str, num, flag и txt со значениями 'Привет', 123, true, 'true'. При помощи оператора определения типа убедитесь, что переменных принадлежат типам: string, number, boolean.",
+  "subtasks" : [
+      ["( str )","str is variable"],
+      ["(typeof str === `string`)","str type is `string`"],
+      ["str === `Привет`","str equivalent `Привет`"],
+      ["( num )","num is variable"],
+      ["typeof num === `number`","num type is `number`"],
+      ["num === 123", "num equivalent 123"],
+      ["( flag )","flag is variable"],
+      ["typeof flag === `boolean`","flag type is `boolean`"],
+      ["flag === true", "flag equivalent true"],
+      ["( txt )","txt is variable"],
+      ["typeof txt === `string`","txt type is `string`"],
+      ["txt === 'true'", "txt equivalent `true`"]
+    ]
 };
 
-let vm = new VM({
-  timeout: 100,
-  sandbox
-});
- 
-const code = `
-const v1 = 234;
+// внешний код - будет получаться от обучаемого
+const code = `let str 'Привет', txt = 'true', flag = true, num = 123;`
 
+const result = jsTaskChecker(task, code);
 
-messages.push( { type: typeof v1 == 'number' ? 'success' : 'error', payload: 'v1 создана и она числового типа' })  
-messages.push( { type: v1 == 234 ? 'success' : 'error', payload: 'v1 равна 234' })  
-messages.push( { type: test[0](v1) ? 'success' : 'error', payload: 'проверка функцией: v1 равна 234' })  
-
-`
- 
-try {
-  vm.run(code);
-} catch (err) {
-  console.error(' ');
-  console.error('Ошибка скрипта...');
-  console.error(' ');
- 
-  // получаем фрагменты ответа с ошибкой от интерпретатора
-  const [
-    fileAndLineNumber,
-    code,
-    pointer,
-    ,
-    message
-  ] = err.stack.split('\n');
- 
- 
-  // если ошибка во второй строке "vm.js:2", получаем 2
-  const line = fileAndLineNumber.split(':')[1];
- 
-  // номер символа где ошибка
-  position = pointer.indexOf('^')
- 
-  // собираем новый ответ ошибку
-  const error = {
-    line,
-    code,
-    message,
-    position
-  }
- 
-  console.log('\tНомер строки с ошибкой: ', line)
- 
-  //errorCodeLine и cursorErrorCode нужно выводить вместе в <pre>
-  console.log('\tСтрока  с ошибкой', code)
-  console.log('\tГде именно ошибка', pointer)
- 
-  console.log('\tОшибка ', message)
-  console.log('\tПозиция символа с ошибкой ', position)
- 
-  console.error(' ');
-  console.log(JSON.stringify(error, null, ' '));
+if(typeof result.message == 'string' ){
+  console.log(JSON.stringify(result, null, ' '))
+} else {
+  console.log(JSON.stringify(result, null, ' '))
+  console.log('Ошибок:', result.message.filter(m => m.type == '-').length);
 }
 
-console.log(sandbox.messages)
